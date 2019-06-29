@@ -1,8 +1,8 @@
 package models
 
 import (
-	"time"
 	"database/sql"
+	"time"
 )
 
 type Tag struct {
@@ -40,7 +40,7 @@ func (t *Tag) FindOrCreateByTitle() error {
 func Tags() ([]*Tag, error) {
 	statement := `select id, title, createdAt, updatedAt from tags order by id`
 	rows, err := sqldb.Query(statement)
-	if err !=nil {
+	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()

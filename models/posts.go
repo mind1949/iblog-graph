@@ -1,9 +1,9 @@
 package models
 
 import (
-	"time"
-	"github.com/lib/pq"
 	"fmt"
+	"github.com/lib/pq"
+	"time"
 )
 
 type Post struct {
@@ -16,8 +16,8 @@ type Post struct {
 }
 
 func (p *Post) Save() error {
-	statement := `insert into posts(title, content, tagsid, createdAt) values($1, $2, $3, $4) returning id`
-	row := sqldb.QueryRow(statement, p.Title, p.Content, pq.Array(p.TagsID), p.CreatedAt)
+	statement := `insert into posts(title, content, tagsid, createdAt, updatedAt) values($1, $2, $3, $4, $5) returning id`
+	row := sqldb.QueryRow(statement, p.Title, p.Content, pq.Array(p.TagsID), p.CreatedAt, p.UpdatedAt)
 	err := row.Scan(&(p.ID))
 	if err != nil {
 		return err

@@ -10,8 +10,8 @@ exec:
 model:
   filename: models_gen.go
 resolver:
-  filename: resolver.go
-  type: Resolver
+  filename: resolvers/resolver.go
+  type: github.com/mind1949/iblog/resolvers.Resolver
 models:
   Post:
     model: github.com/mind1949/iblog/models.Post
