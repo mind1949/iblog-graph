@@ -7,12 +7,13 @@ import (
 )
 
 var (
-	pgDNS = "user=postgres user1dbname=iblog sslmode=disable"
+	pgDNS = "user=postgres dbname=iblog host=localhost port=5432 sslmode=disable"
 	PGDB *sql.DB
 )
 
 func init() {
-	PGDB, err := sql.Open("postgres", pgDNS)
+	var err error
+	PGDB, err = sql.Open("postgres", pgDNS)
 	if err != nil {
 		panic(fmt.Sprintf("sql.Open('postgresql', %q), err: %v", pgDNS, err))
 	}

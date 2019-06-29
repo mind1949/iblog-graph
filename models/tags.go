@@ -25,8 +25,8 @@ func (t *Tag) FindOrCreateByTitle() error {
 	statement := `select id from tags where title = $1`
 	err := sqldb.QueryRow(statement, t.Title).Scan(&t.ID)
 	if err == sql.ErrNoRows {
-		statement = `insert into tags(title, createdAt) values($1, $2) returning id, title, createdAt`
-		err = sqldb.QueryRow(statement, t.Title, time.Now()).Scan(&t.ID, &t.Title, &t.CreatedAt)
+		statement = `insert into tags(title, createdAt, updatedAt) values($1, $2) returning id, title, createdAt`
+		err = sqldb.QueryRow(statement, t.Title, time.Now(), time.Now()).Scan(&t.ID, &t.Title, &t.CreatedAt)
 		if err != nil {
 			return err
 		}

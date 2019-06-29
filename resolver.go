@@ -4,6 +4,7 @@ package iblog
 import (
 	"context"
 	"github.com/mind1949/iblog/models"
+	"time"
 )
 
 type Resolver struct {}
@@ -22,6 +23,8 @@ func (r *mutationResolver) CreatePost(ctx context.Context, input *NewPost) (*mod
 	post := &models.Post{
 		Title:   input.Title,
 		Content: input.Content,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	post.TagsID = make([]int,len(input.TagsTitle))

@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+	"github.com/lib/pq"
+	"fmt"
 )
 
 type Post struct {
@@ -14,8 +16,9 @@ type Post struct {
 }
 
 func (p *Post) Save() error {
-	statement := `insert into posts(title, content, tagsID, createdAt) values($1, $2, $3, $4) returning id`
-	err := sqldb.QueryRow(statement, p.ID, p.Title, p.Content, p.TagsID, p.CreatedAt).Scan(&p.ID)
+	statement := `insert into posts(title, content, tagsid, createdAt) values($1, $2, $3, $4) returning id`
+	row := sqldb.QueryRow(statement, p.Title, p.Content, pq.Array(p.TagsID), p.CreatedAt)
+	err := row.Scan(&(p.ID))
 	if err != nil {
 		return err
 	}
@@ -23,8 +26,9 @@ func (p *Post) Save() error {
 }
 
 func (p *Post) Find() error {
-	statement := `select id, title, content, createdAt, updatedAt from posts where id = $1`
-	err := sqldb.QueryRow(statement, p.ID).Scan(&p.ID, &p.Title, &p.Content, &p.CreatedAt, &p.UpdatedAt)
+	statement := "select id, title, content, createdAt, updatedAt from posts where id = $1"
+	row := sqldb.QueryRow(statement, p.ID)
+	err := row.Scan(&p.ID, &p.Title, &p.Content, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return err
 	}
@@ -37,12 +41,14 @@ func Posts() ([]*Post, error) {
 	defer rows.Close()
 
 	posts := []*Post{}
-	if rows.Next() {
+	for rows.Next() {
 		post := &Post{}
 		err = rows.Scan(&post.ID, &post.Title, &post.Content, &post.CreatedAt, &post.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
+		//debug
+		fmt.Printf("%#v", *post)
 		posts = append(posts, post)
 	}
 	return posts, nil
